@@ -113,27 +113,29 @@ void playlist_browse_try() {
                 return;
             }
         }
-
-        if (DEBUG) printf("Playlist %s \n", sp_playlist_name(currentPlaylist));
-        
+     
         if (checked[z] != 1) {
+            printf("{'list' : '%s', 'songs' : [", sp_playlist_name(currentPlaylist));
             for(i = 0; i < tracks; i++) {
                 sp_track *t = sp_playlist_track(currentPlaylist, i);
-                printf("%d - song: %s \n", i+1, sp_track_name (t));
+                sp_artist* artist = sp_track_artist  (t, 0);
+                printf("{ 'name' : '%s' , 'artist' : '%s' , 'popularity' : %d }", sp_track_name (t), sp_artist_name(artist), sp_track_popularity (t));
                 if (i == tracks-1) {
                     checked[z] = 1;
-                    printf ("last song was printed ------------------ \n");
+                    printf ("]},");
                     processedCounter++;
-                } 
+                } else {
+                    printf(",\n");
+                }
             }
         }
 
         //sp_playlist_remove_callbacks(currentPlaylist, &pl_callbacks, NULL);
         //sp_playlist_release(currentPlaylist);*/
         
-        printf("process count %d : %d \n", playlistCounter, processedCounter);
+       if (DEBUG) printf("process count %d : %d \n", playlistCounter, processedCounter);
         if (playlistCounter == processedCounter){
-            printf("Exiting process correctly");
+            printf("]");
             g_running = 0;
         } 
     }
@@ -194,10 +196,10 @@ void playlist_added(sp_playlistcontainer *pc, sp_playlist *pl,
 {
     char *radioList = "Liked from Radio";
     const char *name = sp_playlist_name(pl);
-    //if (strlen(name) < 1) return;
+    if (strlen(name) < 1) return;
     if (playlistCounter >= 50) return;
     if (!strcmp(name, radioList)) return;
-    printf("\t playlist loaded %s, number: %d \n", name, playlistCounter);
+    if (DEBUG) printf("\t playlist loaded %s, number: %d \n", name, playlistCounter);
     playListArray[playlistCounter] = pl; //its overriding other playlists!!!
     playlistCounter++;
     browse_playlist(pl);
@@ -236,6 +238,7 @@ void on_login(sp_session *session, sp_error error)
 
     g_logged_in = 1;
 
+    printf("[");
     // rwrofl, goofyahead
     sp_playlistcontainer *container = sp_session_publishedcontainer_for_user_create(session, currentUser);
     sp_playlistcontainer_add_callbacks(container,&pc_callbacks,NULL);
@@ -338,6 +341,6 @@ int main(int argc, char **argv){
         pthread_mutex_lock(&lock);
     }
 
-    printf("success!\n");
+    if (DEBUG) printf("success!\n");
     return 0;
 }
