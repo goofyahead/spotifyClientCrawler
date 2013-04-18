@@ -19,7 +19,7 @@ parser.options.quitOnError = false;
 parser.options.noScraperLogging = true;
 
 parser.options.input = new engine.inputs.RangeInput({
-    start: 30,
+    start: 1,
     stop: 999000000,
     step: 1
 });
