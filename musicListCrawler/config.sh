@@ -1,0 +1,3 @@
+export CRAWLER_PREFIX='sp'
+export CRAWLER_ID='25'
+export CRAWLER_LOGGER='d4431ef8-913c-4ddf-888b-2244c9d9777c'

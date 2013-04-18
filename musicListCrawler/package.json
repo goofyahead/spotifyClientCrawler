@@ -1,0 +1,22 @@
+{
+    "name": "spotify",
+    "version": "0.0.1",
+    "description": "Ark.com spotify scraper",
+    "dependencies": {
+        "laeh2": "*",
+        "underscore": "*",
+        "cheerio": "*",
+        "commander": "*",
+        "async-mini": "*",
+        "jsdom": "*",
+        "mongodb": "1.X",
+        "colors" : "*"
+    },
+    "devDependencies": {
+        "mocha": "*"
+    },
+    "scripts": {
+        "test": "mocha -t 60000 -s 10000 -R list",
+        "test-dev": "mocha -t 60000 -s 10000 -R list -w"
+    }
+}

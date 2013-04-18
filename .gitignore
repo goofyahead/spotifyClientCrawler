@@ -1,3 +1,7 @@
-build
-tmp
-spot
+musicListCrawler/build
+musicListCrawler/tmp
+musicListCrawler/spot
+musicListCrawler/node_modules
+musicListCrawler/esv3.json
+IdCrawler/node_modules
+IdCrawler/esv3.json
