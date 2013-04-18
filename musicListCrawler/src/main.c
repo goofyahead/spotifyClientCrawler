@@ -192,9 +192,11 @@ void browse_playlist(sp_playlist *pl)
 void playlist_added(sp_playlistcontainer *pc, sp_playlist *pl,
  int position, void *userdata)
 {
+    char *radioList = "Liked from Radio";
     const char *name = sp_playlist_name(pl);
-    if (strlen(name) < 1) return;
-    if (playlistCounter > 50) return;
+    //if (strlen(name) < 1) return;
+    if (playlistCounter >= 50) return;
+    if (!strcmp(name, radioList)) return;
     printf("\t playlist loaded %s, number: %d \n", name, playlistCounter);
     playListArray[playlistCounter] = pl; //its overriding other playlists!!!
     playlistCounter++;
