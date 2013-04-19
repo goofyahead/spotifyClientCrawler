@@ -39,6 +39,33 @@ int processedCounter = 0;
 
 sp_playlist_callbacks pl_callbacks;
 
+char *replace_str(char *str, char *orig, char *rep)
+{
+  static char buffer[4096];
+  char *p;
+
+  if(!(p = strstr(str, orig)))  // Is 'orig' even in 'str'?
+    return str;
+
+  strncpy(buffer, str, p-str); // Copy characters from 'str' start to 'orig' st$
+  buffer[p-str] = '\0';
+
+  sprintf(buffer+(p-str), "%s%s", rep, p+strlen(orig));
+
+  if(p = strstr(str, orig)) replace_str(buffer, orig, rep);
+  return buffer;
+}
+
+char *replaceIncorrectCharacters (char *name){
+    char * newName = replace_str(name, "\"", "'");
+    newName = replace_str(newName, "[", " ");
+    newName = replace_str(newName, "]", " ");
+    newName = replace_str(newName, "{", " ");
+    newName = replace_str(newName, "}", " ");
+    newName = replace_str(newName, ",", " ");
+    return newName;
+}
+
 void on_search_complete(sp_search *search, void *userdata) {
     debug("callback: on_search_complete");
     sp_error error = sp_search_error(search);
@@ -75,12 +102,12 @@ void run_search(sp_session *session) {
 
 void playlist_browse_try() {
     //pthread_mutex_lock(&arrayLock);
-    if (browsing == 1) {
-        if (DEBUG) printf("sorry \n");
-        return;
-    } 
-    browsing = 1;
-    for (int z = 0; z < 50; z++) {
+    // if (browsing == 1) {
+    //     if (DEBUG) printf("sorry \n");
+    //     return;
+    // } 
+    // browsing = 1;
+    for (int z = 0; z <= 50; z++) {
         if (DEBUG) printf("%d \n", z);
         if (playListArray[z] == NULL) {
             browsing = 0;
@@ -105,41 +132,54 @@ void playlist_browse_try() {
         }
 
         tracks = sp_playlist_num_tracks(currentPlaylist);
-        for(i = 0; i < tracks; i++) {
+        if (tracks > 10) tracks = 10;
+        // check if a track is loadable :D
+
+        for(i = 0; i <= tracks; i++) {
             sp_track *t = sp_playlist_track(currentPlaylist, i);
-            if (!sp_track_is_loaded(t)){
-                if (DEBUG) printf("\tTracks not ready \n");
-                browsing = 0;
-                return;
+            if (t != NULL){
+                //sp_error error = sp_track_error (t);
+                if (!sp_track_is_loaded(t)){
+                    if (DEBUG) printf("\tTracks not ready \n");
+                    browsing = 0;
+                    return;
+                }
             }
         }
      
         if (checked[z] != 1) {
-            printf("{'list' : '%s', 'songs' : [", sp_playlist_name(currentPlaylist));
-            for(i = 0; i < tracks; i++) {
+            printf("{\"list\":\"%s\",\"songs\":[", sp_playlist_name(currentPlaylist));
+            for(i = 0; i <= tracks; i++) {
                 sp_track *t = sp_playlist_track(currentPlaylist, i);
-                sp_artist* artist = sp_track_artist  (t, 0);
-                printf("{ 'name' : '%s' , 'artist' : '%s' , 'popularity' : %d }", sp_track_name (t), sp_artist_name(artist), sp_track_popularity (t));
-                if (i == tracks-1) {
-                    checked[z] = 1;
+                if (t != NULL){
+                    sp_error error = sp_track_error (t);
+                    if (error == SP_ERROR_OK){
+                        sp_artist* artist = sp_track_artist (t, 0);
+                        char *trackName = replaceIncorrectCharacters(sp_track_name (t));
+                        char *artistName = replaceIncorrectCharacters(sp_artist_name (artist));
+                        printf("{\"name\":\"%s\",\"artist\":\"%s\"}", trackName, artistName);
+                        if (i == tracks-1) {
+                            checked[z] = 1;
+                            processedCounter++;
+                        }
+                    }   
+                }
+                if (i == tracks){
                     printf ("]},");
-                    processedCounter++;
                 } else {
                     printf(",\n");
                 }
             }
         }
-
-        //sp_playlist_remove_callbacks(currentPlaylist, &pl_callbacks, NULL);
-        //sp_playlist_release(currentPlaylist);*/
         
        if (DEBUG) printf("process count %d : %d \n", playlistCounter, processedCounter);
         if (playlistCounter == processedCounter){
             printf("]");
             g_running = 0;
+            return;
         } 
     }
-    browsing = 0;
+    // browsing = 0;
 }
 
 void pl_tracks_added(sp_playlist *pl, sp_track * const * tracks,
@@ -338,7 +378,7 @@ int main(int argc, char **argv){
         sp_session_process_events(session, &next_timeout);
         if (DEBUG) printf("should wait for %d \n",next_timeout);
         usleep(next_timeout * 100);
-        pthread_mutex_lock(&lock);
+        //pthread_mutex_lock(&lock);
     }
 
     if (DEBUG) printf("success!\n");
