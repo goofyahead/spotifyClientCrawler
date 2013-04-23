@@ -14,7 +14,7 @@ parser.options.requestTimeout = 3000;
 
 parser.options.extraOutputs = [
 	{	outputName : 'outIds',
-		idx : 'tu_ids/ids'
+		idx : 'sp_ids/ids'
 	}
 ];
 
