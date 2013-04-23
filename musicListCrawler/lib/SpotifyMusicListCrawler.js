@@ -3,7 +3,6 @@ var _x = laeh2._x;
 var _e = laeh2._e;
 
 var _ = require('underscore');
-var jsdom = require('jsdom');
 var colors = require('colors');
 
 exports.SpotifyMusicListCrawler = function SpotifyMusicListCrawler() {
