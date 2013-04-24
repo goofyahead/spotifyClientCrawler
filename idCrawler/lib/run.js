@@ -8,10 +8,6 @@ var es = require('../../../crawler_engine/lib/es');
 
 parser.options.quitOnError = false;
 
-parser.options.noScraperLogging = true;
-
-parser.options.requestTimeout = 3000;
-
 parser.options.extraOutputs = [
 	{	outputName : 'outIds',
 		idx : 'sp_ids/ids'
@@ -19,6 +15,5 @@ parser.options.extraOutputs = [
 ];
 
 parser.run({
-    scraper: myScraper.SpotifyIdCrawler,
-    useOutputIds: true
+    scraper: myScraper.SpotifyIdCrawler
 });
