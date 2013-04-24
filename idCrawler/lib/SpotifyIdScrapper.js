@@ -15,7 +15,7 @@ exports.SpotifyIdCrawler = function SpotifyIdCrawler() {
 
         var url = 'http://open.spotify.com/user/' + item;
         console.log(url.toString().green);
-
+        api.storeData(item, null, callback);
         // api.loadUrl(url, {}, _x(callback, true, function(error, body, res) {
 
         //     $ = cheerio.load(body);
