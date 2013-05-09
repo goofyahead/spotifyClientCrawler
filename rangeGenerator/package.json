@@ -1,0 +1,9 @@
+{
+    "name": "rangeGenerator",
+    "version": "0.0.1",
+    "description": "generates files of numbers",
+    "dependencies": {
+        "colors" : "*",
+        "commander" : "*"
+    }    
+}

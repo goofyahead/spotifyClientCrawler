@@ -9,8 +9,9 @@ var es = require('../../../crawler_engine/lib/es');
 parser.options.quitOnError = false;
 
 parser.options.extraOutputs = [
-	{	outputName : 'outIds',
-		idx : 'sp_ids/ids'
+	{
+		idx : 'sp_ids/ids',
+		overwrite: false
 	}
 ];
 
