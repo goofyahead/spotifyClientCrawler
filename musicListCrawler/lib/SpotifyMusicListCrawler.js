@@ -12,30 +12,11 @@ exports.SpotifyMusicListCrawler = function SpotifyMusicListCrawler() {
         var that = this;
         var data = {};
 
-        console.log(item.toString().green + ' item processed'.green);
-        console.log(__dirname);
+        var url = 'http://immense-stream-2556.herokuapp.com/spotify/'
+        + item +'?key=arkguinscanfly2';
 
-        var childProcess = require('child_process'),spot;
-
-        spot = childProcess.exec(__dirname + '/../spot ' + item , 
-            { encoding: 'utf8',
-              timeout: 0,
-              maxBuffer: 1000*1024,
-              killSignal: 'SIGTERM',
-              cwd: null,
-              env: null },
-              function (error, stdout, stderr) {
-                if (error) {
-                 console.log(error.stack);
-                 console.log('Error code: ' + error.code);
-                 console.log('Signal received: ' + error.signal);
-                }
-                console.log('Child Process STDOUT: ' + stdout);
-                console.log('Child Process STDERR: ' + stderr);
-        });
-
-        spot.on('exit', function (code) {
-           console.log('Child process exited with exit code '+ code);
-        });
+        api.loadUrl(url, {}, _x(callback, true, function(error, body, res) {
+          api.storeData(item, body, _x(callback, true, callback));
+        }));
     };
 };
