@@ -30,8 +30,9 @@ exports.SpotifyMusicListCrawler = function SpotifyMusicListCrawler() {
                 + item +'?key=arkguinscanfly2';
                 //console.log('call for ' + item);
                 api.loadUrl(url, {}, function(error, body, res) {
-                  console.log(body);
+                  
                   data['music'] = JSON.parse(body);
+                  console.log(data);
                   api.storeData(item, data, _x(callback, true, callback));
                 });
             }
