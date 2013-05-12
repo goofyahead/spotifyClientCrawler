@@ -11,6 +11,5 @@ parser.options.quitOnError = false;
 parser.options.noScraperLogging = true;
 
 parser.run({
-    scraper: myScraper.SpotifyMusicListCrawler,
-    useOutputIds: true
+    scraper: myScraper.SpotifyMusicListCrawler
 });

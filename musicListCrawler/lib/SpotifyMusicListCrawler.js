@@ -14,8 +14,9 @@ exports.SpotifyMusicListCrawler = function SpotifyMusicListCrawler() {
 
         var url = 'http://immense-stream-2556.herokuapp.com/spotify/'
         + item +'?key=arkguinscanfly2';
-
+        console.log('call for ' + item);
         api.loadUrl(url, {}, _x(callback, true, function(error, body, res) {
+          console.log(body);
           api.storeData(item, body, _x(callback, true, callback));
         }));
     };
